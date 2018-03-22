@@ -68,9 +68,9 @@ app.post('/login', function (request, response) {
 
 app.get('/myclasses/:id', (request, response) => {
     const text = `
-    SELECT res.id, res.username, res.name, res.date, res.starttime, danceuser.firstname as teacher
+    SELECT res.id, res.username, res.name, res.datetime, danceuser.firstname as teacher
     FROM
-	    (SELECT du.id, username, name, date, starttime, teacher
+	    (SELECT du.id, username, name, datetime, teacher
 	    FROM dancecourseattendee dca, danceuser du, dancecourse dc, danceclass dcl
 	    WHERE dc.id = dca.dancecourseid
 	    AND dca.danceuserid = du.id
