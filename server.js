@@ -45,3 +45,22 @@ app.get('/danceusers', (request, response) => {
             response.json(res.rows)
     })
 })
+
+app.post('/login', function (request, response) {
+    const text = `
+    SELECT *
+    FROM danceuser
+    WHERE username = $1`
+
+    const values = [request.body.username]
+
+    client.query(text, values, (err, res) => {
+        if (err) {
+            response.status(400)
+            response.json(err.detail)
+        }
+        else {
+            response.json(res.rows);
+        }
+    })
+})
