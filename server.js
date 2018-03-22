@@ -31,7 +31,7 @@ app.get('/', (request, response) => {
 
 client.connect();
 
-app.get('/api/danceusers', (request, response) => {
+app.get('/danceusers', (request, response) => {
     const text = `
     SELECT *
     FROM danceuser`
