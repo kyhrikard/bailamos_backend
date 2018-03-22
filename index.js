@@ -18,6 +18,18 @@ app.use(function (req, res, next) {
 
 app.listen(port);
 
+app.get('/', (request, response) => {
+  response.write('<h1>Availiable endpoints at the Bailamos Backend</h1>')
+  app._router.stack.forEach(function (r) {
+      if (typeof r.route != 'undefined') {
+          if (r.route.path !== '/') {
+              response.write(`<h2>${r.route.path} -- ${r.route.stack[0].method}</h2>`)
+          }
+      }
+  })
+  response.end()
+})
+
 const capitalize = function (string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -26,7 +38,7 @@ const capitalize = function (string) {
 
 let res;
 
-app.get('/users', function (req, res) {
+app.get('api/users', function (req, res) {
   res.json(database.users);
 });
 
