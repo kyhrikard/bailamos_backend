@@ -91,3 +91,27 @@ app.get('/myclasses/:id', (request, response) => {
             response.json(res.rows)
     })
 })
+
+app.get('/myteachercourses/:id', (request, response) => {
+    const text = `
+    select res.name as danceclass, du.username as teacher, du.id as userid, res.noofstudents
+    from danceuser du,
+	    (select name, teacher, count(*) as noOfStudents
+	    from dancecourseattendee dca, dancecourse dc
+	    where dca.dancecourseid = dc.id
+	    group by name, teacher) as res
+    where du.id = res.teacher
+    and du.id = $1`
+
+    const values = [request.params.id]
+
+    client.query(text, values, (err, res) => {
+        if (err) {
+            response.status(400)
+            response.json(err.detail)
+        }
+        else
+            response.json(res.rows)
+    })
+})
+
