@@ -3,7 +3,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const { Client } = require('pg')
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5001
 const client = new Client({
     connectionString: process.env.DATABASE_URL || 'postgres://abzasocflokido:6a7b5c88a860ba113df1f6a14402fcab61a952e7df03fb6f3d390cc24fe5533d@ec2-54-83-23-91.compute-1.amazonaws.com:5432/d2eqaog5l9ivkf',
     ssl: true
@@ -63,5 +63,30 @@ app.post('/login', function (request, response) {
         else {
             response.json(res.rows);
         }
+    })
+})
+
+app.get('/myclasses/:id', (request, response) => {
+    const text = `
+    SELECT res.id, res.username, res.name, res.date, res.starttime, danceuser.firstname as teacher
+    FROM
+	    (SELECT du.id, username, name, date, starttime, teacher
+	    FROM dancecourseattendee dca, danceuser du, dancecourse dc, danceclass dcl
+	    WHERE dc.id = dca.dancecourseid
+	    AND dca.danceuserid = du.id
+	    AND dcl.dancecourseid = dc.id) 
+    AS res, danceuser
+    WHERE danceuser.id = res.teacher
+    AND res.id = $1`
+
+    const values = [request.params.id]
+
+    client.query(text, values, (err, res) => {
+        if (err) {
+            response.status(400)
+            response.json(err.detail)
+        }
+        else
+            response.json(res.rows)
     })
 })
