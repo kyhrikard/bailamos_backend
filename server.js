@@ -77,7 +77,8 @@ app.get('/myclasses/:id', (request, response) => {
 	    AND dcl.dancecourseid = dc.id) 
     AS res, danceuser
     WHERE danceuser.id = res.teacher
-    AND res.id = $1`
+    AND res.id = $1
+    ORDER BY datetime`
 
     const values = [request.params.id]
 
