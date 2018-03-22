@@ -48,9 +48,10 @@ app.get('/danceusers', (request, response) => {
 
 app.post('/login', function (request, response) {
     const text = `
-    SELECT *
-    FROM danceuser
-    WHERE username = $1`
+    SELECT du.id, du.firstname, du.lastname, du.age, du.username, role.name as role
+    FROM danceuser du, role
+    WHERE du.role = role.id
+    AND username = $1`
 
     const values = [request.body.username]
 
